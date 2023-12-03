@@ -1,27 +1,22 @@
-const fs = require("fs").promises;
+const fs = require("fs/promises");
 const path = require("path");
-const contactsPath = path.join(__dirname, "contacts.json");
+const contactsPath = path.join(__dirname, "db/contacts.json");
 
-const listContacts = async () => {
+async function listContacts() {
   try {
     const readResult = await fs.readFile(contactsPath, "utf-8");
-    // console.log(readResult);
-    const result = JSON.parse(readResult);
-    const obj = result[0];
-    console.log(typeof obj);
-    console.log(result);
-    return result;
+    return JSON.parse(readResult);
   } catch (err) {
     console.log(err);
     return [];
   }
-};
+}
 
 async function getContactById(contactId) {
   try {
     const contacts = await listContacts();
-    const contact = contacts.find(({ id }) => {
-      id === contactId;
+    const contact = contacts.find((contact) => {
+      return contact.id === contactId.toString();
     });
 
     if (contact) {
@@ -29,18 +24,16 @@ async function getContactById(contactId) {
     } else {
       console.log(`Contact with ID ${contactId} not found.`);
     }
-
-    return contact;
-  } catch (err) {
-    console.log(err);
-    return null;
+  } catch (error) {
+    console.error(`Error fetching contacts: ${error.message}`);
+    throw error;
   }
 }
 
 async function removeContact(contactId) {
   try {
     let contacts = await listContacts();
-    const contact = contacts.filter(({ id }) => id !== contactId);
+    const contact = contacts.filter(({ id }) => id !== contactId.toString());
     console.log(contact);
     fs.writeFile(contactsPath, newContacts, "utf8", (err) => {
       if (err) {

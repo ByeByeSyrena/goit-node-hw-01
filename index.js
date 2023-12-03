@@ -4,7 +4,7 @@ const {
   getContactById,
   removeContact,
   addContact,
-} = require("./db/contacts");
+} = require("./contacts");
 
 function invokeAction({ action, id, name, email, phone }) {
   switch (action) {
