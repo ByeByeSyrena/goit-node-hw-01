@@ -5,9 +5,11 @@ const contactsPath = path.join(__dirname, "contacts.json");
 const listContacts = async () => {
   try {
     const readResult = await fs.readFile(contactsPath, "utf-8");
-    console.log(readResult);
+    // console.log(readResult);
     const result = JSON.parse(readResult);
-    // console.table(result);
+    const obj = result[0];
+    console.log(typeof obj);
+    console.log(result);
     return result;
   } catch (err) {
     console.log(err);
@@ -18,7 +20,9 @@ const listContacts = async () => {
 async function getContactById(contactId) {
   try {
     const contacts = await listContacts();
-    const contact = contacts.find(({ contact }) => contact.id === contactId);
+    const contact = contacts.find(({ id }) => {
+      id === contactId;
+    });
 
     if (contact) {
       console.log(contact);
