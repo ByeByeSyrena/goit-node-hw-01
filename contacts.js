@@ -6,6 +6,8 @@ const crypto = require("crypto");
 async function listContacts() {
   try {
     const readResult = await fs.readFile(contactsPath, "utf-8");
+    const result = JSON.parse(readResult);
+    console.table(result);
     return JSON.parse(readResult);
   } catch (err) {
     console.log(err);
@@ -24,6 +26,7 @@ async function getContactById(contactId) {
       console.log(contact);
     } else {
       console.log(`Contact with ID ${contactId} not found.`);
+      return null;
     }
   } catch (error) {
     console.error(`Error fetching contacts: ${error.message}`);
@@ -37,8 +40,11 @@ async function removeContact(contactId) {
     const updatedContacts = contacts.filter(
       ({ id }) => id !== contactId.toString()
     );
+    const deletedContact = contacts.find((contact) =>
+      contact.id === contactId.toString() ? contact : null
+    );
     const stringifiedContacts = JSON.stringify(updatedContacts);
-    console.log(updatedContacts);
+    console.log(deletedContact);
     fs.writeFile(contactsPath, stringifiedContacts, "utf8", (err) => {
       if (err) {
         console.error("Error writing to file:", err);
