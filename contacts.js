@@ -52,7 +52,7 @@ async function removeContact(contactId) {
   }
 }
 
-function addContact(name, email, phone) {
+async function addContact(name, email, phone) {
   const newContact = {
     id: crypto.randomBytes(16).toString("hex"),
     name,
@@ -60,9 +60,14 @@ function addContact(name, email, phone) {
     phone,
   };
 
-  const stringifiedContact = JSON.stringify(newContact);
+  const contacts = await listContacts();
 
-  fs.writeFile(contactsPath, [...data, stringifiedContact], "utf8", (err) => {
+  const newArray = [...contacts, newContact];
+  console.log(newArray);
+
+  const updatedArray = JSON.stringify(newArray);
+
+  fs.writeFile(contactsPath, updatedArray, "utf8", (err) => {
     if (err) {
       console.error("Error writing to file:", err);
     } else {
