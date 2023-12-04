@@ -1,6 +1,7 @@
-const fs = require("fs/promises");
+const fs = require("fs").promises;
 const path = require("path");
 const contactsPath = path.join(__dirname, "db/contacts.json");
+const crypto = require("crypto");
 
 async function listContacts() {
   try {
@@ -32,10 +33,13 @@ async function getContactById(contactId) {
 
 async function removeContact(contactId) {
   try {
-    let contacts = await listContacts();
-    const contact = contacts.filter(({ id }) => id !== contactId.toString());
-    console.log(contact);
-    fs.writeFile(contactsPath, newContacts, "utf8", (err) => {
+    const contacts = await listContacts();
+    const updatedContacts = contacts.filter(
+      ({ id }) => id !== contactId.toString()
+    );
+    const stringifiedContacts = JSON.stringify(updatedContacts);
+    console.log(updatedContacts);
+    fs.writeFile(contactsPath, stringifiedContacts, "utf8", (err) => {
       if (err) {
         console.error("Error writing to file:", err);
       } else {
@@ -49,7 +53,22 @@ async function removeContact(contactId) {
 }
 
 function addContact(name, email, phone) {
-  // ...your code
+  const newContact = {
+    id: crypto.randomBytes(16).toString("hex"),
+    name,
+    email,
+    phone,
+  };
+
+  const stringifiedContact = JSON.stringify(newContact);
+
+  fs.writeFile(contactsPath, [...data, stringifiedContact], "utf8", (err) => {
+    if (err) {
+      console.error("Error writing to file:", err);
+    } else {
+      console.log("File written successfully.");
+    }
+  });
 }
 
 module.exports = {
