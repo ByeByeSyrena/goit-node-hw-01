@@ -11,7 +11,6 @@ async function listContacts() {
     return JSON.parse(readResult);
   } catch (err) {
     console.log(err);
-    return [];
   }
 }
 
@@ -60,7 +59,6 @@ async function removeContact(contactId) {
     });
   } catch (err) {
     console.log(err);
-    return [];
   }
 }
 
