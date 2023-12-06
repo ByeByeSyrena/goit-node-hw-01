@@ -3,20 +3,30 @@ const path = require("path");
 const contactsPath = path.join(__dirname, "db/contacts.json");
 const crypto = require("crypto");
 
-async function listContacts() {
+async function fetchContacts() {
   try {
     const readResult = await fs.readFile(contactsPath, "utf-8");
-    const result = JSON.parse(readResult);
-    console.table(result);
     return JSON.parse(readResult);
   } catch (err) {
-    console.log(err);
+    console.error("Error fetching contacts:", err);
+    throw err;
+  }
+}
+
+async function listContacts() {
+  try {
+    const result = await fetchContacts();
+    console.table(result);
+    return result;
+  } catch (err) {
+    console.error("Error listing contacts:", err);
+    throw err;
   }
 }
 
 async function getContactById(contactId) {
   try {
-    const contacts = await listContacts();
+    const contacts = await fetchContacts();
     const contact = contacts.find((contact) => {
       return contact.id === contactId.toString();
     });
@@ -35,7 +45,7 @@ async function getContactById(contactId) {
 
 async function removeContact(contactId) {
   try {
-    const contacts = await listContacts();
+    const contacts = await fetchContacts();
     const updatedContacts = contacts.filter(
       ({ id }) => id !== contactId.toString()
     );
@@ -71,7 +81,7 @@ async function addContact(name, email, phone) {
     phone,
   };
 
-  const contacts = await listContacts();
+  const contacts = await fetchContacts();
 
   const newArray = [...contacts, newContact];
   console.log(newContact);
