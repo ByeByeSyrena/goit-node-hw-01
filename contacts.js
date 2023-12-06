@@ -59,6 +59,7 @@ async function removeContact(contactId) {
     });
   } catch (err) {
     console.log(err);
+    throw error;
   }
 }
 
