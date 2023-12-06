@@ -25,7 +25,7 @@ async function getContactById(contactId) {
     if (contact) {
       console.log(contact);
     } else {
-      console.log(`Contact with ID ${contactId} not found.`);
+      console.log(`null`);
       return null;
     }
   } catch (error) {
@@ -44,7 +44,13 @@ async function removeContact(contactId) {
       contact.id === contactId.toString() ? contact : null
     );
     const stringifiedContacts = JSON.stringify(updatedContacts);
-    console.log(deletedContact);
+
+    if (!deletedContact) {
+      console.log("null");
+    } else {
+      console.log(deletedContact);
+    }
+
     fs.writeFile(contactsPath, stringifiedContacts, "utf8", (err) => {
       if (err) {
         console.error("Error writing to file:", err);
@@ -69,7 +75,7 @@ async function addContact(name, email, phone) {
   const contacts = await listContacts();
 
   const newArray = [...contacts, newContact];
-  console.log(newArray);
+  console.log(newContact);
 
   const updatedArray = JSON.stringify(newArray);
 
